@@ -87,12 +87,12 @@ class Beam:
     """
     こうかとんが放つビームに関するクラス
     """
-    def イニシャライザ(self, bird:"Bird"):
+    def __init__(self, bird:"Bird"):
         """
         ビーム画像Surfaceを生成する
         引数 bird：ビームを放つこうかとん（Birdインスタンス）
         """
-        self.img = pg.画像のロード(f"fig/beam.png")#surface
+        self.img = pg.image.load(f"fig/beam.png")#surface
         self.rct = self.img.get_rect()#rect
         self.rct.centery = bird.rct.centery#こうかとんの中心縦座標
         self.rct.left=bird.rct.left#ビームの左座標 = こうかとんの右座標
@@ -153,16 +153,22 @@ def main():
             if event.type == pg.QUIT:
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-                 # スペースキー押下でBeamクラスのインスタンス生成
                 beam = Beam(bird)            
         screen.blit(bg_img, [0, 0])
-        
+
         if bird.rct.colliderect(bomb.rct):
             # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
             bird.change_img(8, screen)
             pg.display.update()
             time.sleep(1)
             return
+        
+        if bomb is not None: 
+            if beam is not None: 
+                if beam.rct.colliderect(bomb.rct):
+                    beam=None
+                    bomb=None
+
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
