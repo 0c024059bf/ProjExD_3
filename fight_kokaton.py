@@ -213,7 +213,6 @@ def main():
             fonto = pg.font.Font(None, 80)
             txt = fonto.render("Congratulations", True, (255, 0, 0))
             screen.blit(txt, [WIDTH//2, HEIGHT//2]) 
-        pg.display.update()
         score.update(screen)
         tmr += 1
         clock.tick(50)
