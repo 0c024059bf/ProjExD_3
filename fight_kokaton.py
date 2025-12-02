@@ -5,6 +5,7 @@ import time
 import pygame as pg
 
 
+
 WIDTH = 1100  # ゲームウィンドウの幅
 HEIGHT = 650  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5  # 爆弾の数
@@ -141,6 +142,22 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 
+class Score:
+    def __init__(self):
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.color =(0,0,255)
+        self.score = 0
+        self.img = self.fonto.render(f"スコア: {self.score}", True, self.color)
+        self.rect = self.img.get_rect()
+        self.rect.centerx = 100  
+        self.rect.centery = 600 
+    
+    def update (self,screen):
+        self.img = self.fonto.render(f"スコア: {self.score}", True, self.color)
+        screen.blit(self.img, self.rect)
+
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -153,6 +170,7 @@ def main():
     #     bombs.append(bomb)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beam = None  # ゲーム初期化時にはビームは存在しない
+    score = Score()
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -180,6 +198,7 @@ def main():
                     # ビームが爆弾に当たったら，爆弾とビームを消す
                     beam = None
                     bombs[b] = None
+                    score.score+=1
                     bird.change_img(6, screen)
                     pg.display.update()
         bombs = [bomb for bomb in bombs if bomb  is not None]
@@ -190,9 +209,15 @@ def main():
             beam.update(screen)   
         for bomb in bombs:  # 爆弾が存在していたら
             bomb.update(screen)
+        if bomb not in bombs:
+            fonto = pg.font.Font(None, 80)
+            txt = fonto.render("Congratulations", True, (255, 0, 0))
+            screen.blit(txt, [WIDTH//2, HEIGHT//2]) 
         pg.display.update()
+        score.update(screen)
         tmr += 1
         clock.tick(50)
+        pg.display.flip()
 
 
 if __name__ == "__main__":
